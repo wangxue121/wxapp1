@@ -2,7 +2,13 @@
   <view :style="{height: pageHeight, overflow: 'hidden'}">
     <search @search="disableScroll" />
     <!-- 焦点图 -->
-    <swiper class="banner" indicator-dots indicator-color="rgba(255, 255, 255, 0.6)" indicator-active-color="#fff">
+    <swiper
+      class="banner"
+      indicator-dots
+      circular
+      indicator-color="rgba(255, 255, 255, 0.6)"
+      indicator-active-color="#fff"
+    >
       <swiper-item :key="item.goods_id" v-for="item in swiper_arr" >
         <navigator :url="'/pages/goods/index?id=' + item.goods_id">
           <image :src="item.image_src"></image>
@@ -27,9 +33,11 @@
     <!-- 楼层 -->
     <view class="floors">
       <view class="floor">
+        <!-- 标题 -->
         <view class="title">
           <image src="http://static.botue.com/ugo/uploads/pic_floor01_title.png"></image>
         </view>
+        <!-- 图片 -->
         <view class="items">
           <navigator url="/pages/list/index">
             <image src="http://static.botue.com/ugo/uploads/pic_floor01_1@2x.png"></image>
@@ -118,17 +126,30 @@
       disableScroll (ev) {
         this.pageHeight = ev.pageHeight + 'px';
       },
+      // 轮播图
       async get_swiper(){
-        const [err,res] = await uni.request({
-          url:"https://api-ugo-web.itheima.net/api/public/v1/home/swiperdata"
-        })
-        // console.log(res)
-        // 拿到数据，循环遍历，注意有初始化数据
-        this.swiper_arr=res.data.message;
+      //   const [err,res] = await uni.request({
+      //     url:"https://api-ugo-web.itheima.net/api/public/v1/home/swiperdata"
+      //   })
+      //   // console.log(res)
+      //   // 拿到数据，循环遍历，注意有初始化数据
+      //   this.swiper_arr=res.data.message;
+      // 1.优化后--------
+      const res = await this.request1({
+        url:'/api/public/v1/home/swiperdata'
+      })
+        console.log(res);
+         // 拿到数据，循环遍历，注意有初始化数据
+        this.swiper_arr=res.message;
       }
+     
+   
     },
     onLoad(){
       this.get_swiper();
+      
+      // this 代表实例化 
+      // this.request1()
     }
   }
 </script>
